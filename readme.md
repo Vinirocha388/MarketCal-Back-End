@@ -17,22 +17,21 @@ cd MarketCal-Back-End
 npm install
 
 # 2. Configure o .env
-echo DATABASE_URL="postgresql://usuario:senha@localhost:5432/marketcal?schema=public" > .env
-echo PORT=4001 >> .env
-echo JWT_SECRET="sua_chave_secreta_aqui" >> .env
+DATABASE_URL="link postgres"
+PORT=4000
+JWT_SECRET="sua_chave_secreta_aqui"
 
 # 3. Configure o Prisma
 npx prisma generate
-npx prisma migrate dev --name init
 npm run prisma:seed
 
 # 4. Rode o servidor
 npm run dev
 ```
 
-🎉 Servidor rodando em `http://localhost:4001`
+🎉 Servidor rodando em `http://localhost:4000`
 
-**Credenciais de teste:** `admin@marketcal.com` / `123456`
+
 
 ---
 
@@ -271,18 +270,6 @@ npx prisma studio              # Interface visual do banco
 
 ---
 
-## 🔐 Variáveis de Ambiente (.env)
-
-```env
-DATABASE_URL="postgresql://usuario:senha@localhost:5432/marketcal?schema=public"
-PORT=4001
-JWT_SECRET="sua_chave_secreta_aqui"
-```
-
-> ⚠️ **Importante:** Substitua `usuario`, `senha` e `marketcal` pelos dados do seu banco PostgreSQL!
-
----
-
 ## 🐛 Troubleshooting
 
 | Problema | Solução |
@@ -315,15 +302,6 @@ DATABASE_URL="file:./prisma/dev.db"
 npx prisma migrate dev
 ```
 
----
-
-## 🤝 Contribuição
-
-1. Fork o projeto
-2. Crie uma branch (`git checkout -b feature/NovaFeature`)
-3. Commit (`git commit -m 'Add: Nova feature'`)
-4. Push (`git push origin feature/NovaFeature`)
-5. Abra um Pull Request
 
 ---
 
