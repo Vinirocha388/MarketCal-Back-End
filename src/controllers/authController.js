@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 class AuthController {
   async getAllUsers(req, res) {
     try {
-      const users = await UserModel.findAll();
+      const users = await userModel.findAll();
       res.json(users);
     } catch (error) {
       console.error("Erro ao listar usuários:", error);
@@ -13,41 +13,33 @@ class AuthController {
     }
   }
 
-  //Registrar novo usuário
+  // Registrar novo usuário
   async register(req, res) {
     try {
-      const { name, nickname, email, password } = req.body;
-      //Validação básica
-      if (!name || !nickname || !email || !password) {
-        return res
-          .status(400)
-          .json({ error: "Todos os campos são obrigatórios!" });
+      const { name, email, password } = req.body;
+      // Validação básica
+      if (!name || !email || !password) {
+        return res.status(400).json({ error: "Todos os campos são obrigatórios!" });
       }
 
-      //Verifica se o usuário já existe
+      // Verifica se o usuário já existe
       const userEmailExists = await userModel.findByEmail(email);
       if (userEmailExists) {
         return res.status(400).json({ error: "Email já em uso!" });
       }
 
-      //Verifica se o nickname já existe
-       const userNicknameExists = await userModel.findByNickname(nickname);
-       if (userNicknameExists) {
-         return res.status(400).json({ error: "Nickname já em uso!" });
-       }
-
-      //HASH da senha
+      // HASH da senha
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      //Cria o objeto usuário
+      // Cria o objeto usuário
       const data = {
         name,
-        nickname,
         email,
         password: hashedPassword,
+        role: "agency",
       };
 
-      //Cria o usuário
+      // Cria o usuário
       const newUser = await userModel.create(data);
       res.status(201).json({ message: "Usuário registrado com sucesso", user: newUser });
     } catch (error) {
@@ -56,46 +48,35 @@ class AuthController {
     }
   }
 
-  //Login do usuário
+  // Login do usuário
   async login(req, res) {
     try {
       const { email, password } = req.body;
       if (!email || !password) {
-        return res
-          .status(400)
-          .json({ error: "Email e senha são obrigatórios" });
+        return res.status(400).json({ error: "Email e senha são obrigatórios" });
       }
 
-      //Verifica se o usuário já existe
+      // Verifica se o usuário já existe
       const userExists = await userModel.findByEmail(email);
       if (!userExists) {
         return res.status(401).json({ error: "Credenciais inválidas" });
       }
 
-      //Verifica a senha
-      const isPasswordValid = await bcrypt.compare(
-        password,
-        userExists.password
-      );
+      // Verifica a senha
+      const isPasswordValid = await bcrypt.compare(password, userExists.password);
       if (!isPasswordValid) {
         return res.status(401).json({ error: "Credenciais inválidas" });
       }
 
-      //Gera o token JWT
-      const token = jwt.sign(
-        { id: userExists.id, name: userExists.name,nickname: userExists.nickname, email: userExists.email },
-        process.env.JWT_SECRET,
-        { expiresIn: "1d" } // O token expira em 1 dia
-      );
+      // Gera o token JWT
+      const token = jwt.sign({ id: userExists.id, name: userExists.name, email: userExists.email }, process.env.JWT_SECRET, { expiresIn: "1d" });
 
-      return res.json({
-        message: "Login realizado com sucesso",
-        token,
-        userExists,
-      });
+      const { password: _, ...userSafe } = userExists;
+
+      return res.json({ message: "Login realizado com sucesso", token, user: userSafe });
     } catch (error) {
-        console.error("Erro ao fazer login:", error);
-        res.status(500).json({ error: "Erro ao fazer login" });
+      console.error("Erro ao fazer login:", error);
+      res.status(500).json({ error: "Erro ao fazer login" });
     }
   }
 }

@@ -1,41 +1,30 @@
 import prisma from '../../prisma/client.js';
 
 class UserModel {
-async findAll() {
-    const users = await prisma.user.findMany();
+  async findAll() {
+    const users = await prisma.user.findMany({
+      select: { id: true, name: true, email: true, role: true, createdAt: true, updatedAt: true },
+    });
 
     return users;
   }
 
-async findById(id) {
+  async findById(id) {
     const user = await prisma.user.findUnique({
-      where: {
-        id: Number(id)
-      }
+      where: { id: Number(id) },
+      select: { id: true, name: true, email: true, role: true, createdAt: true, updatedAt: true },
     });
 
     return user;
   }
 
-  //obter um usuario pelo email
-    async findByEmail(email) {
-        const user = await prisma.user.findUnique({
-        where: {
-            email: email
-        }
-        });
-    
-        return user;
-    }
+  // obter um usuario pelo email
+  async findByEmail(email) {
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
 
-    async findByNickname(nickname) {
-      const user = await prisma.user.findUnique({
-      where: {
-          nickname,
-      }
-      });
-  
-      return user;
+    return user;
   }
 
   async create(data) {
@@ -43,29 +32,29 @@ async findById(id) {
       data,
     });
 
-    return user;
+    // não retornar senha diretamente do model
+    const { password, ...rest } = user;
+    return rest;
   }
 
-    async update(id, data) {
-        const user = await prisma.user.update({
-        where: {
-            id: Number(id)
-        },
-        data,
-        });
-    
-        return user;
-    }
+  async update(id, data) {
+    const user = await prisma.user.update({
+      where: { id: Number(id) },
+      data,
+    });
 
-    async delete(id) {
-        const user = await prisma.user.delete({
-        where: {
-            id: Number(id)
-        },
-        });
-    
-        return user;
-    }
+    const { password, ...rest } = user;
+    return rest;
+  }
+
+  async delete(id) {
+    const user = await prisma.user.delete({
+      where: { id: Number(id) },
+    });
+
+    const { password, ...rest } = user;
+    return rest;
+  }
 }
 
-export default new UserModel;
+export default new UserModel();

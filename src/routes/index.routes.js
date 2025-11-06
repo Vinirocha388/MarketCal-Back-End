@@ -1,9 +1,10 @@
 import express from "express";
 
-// Importar todas as rotas
+// Importar rotas
 import authRouter from "./auth.routes.js";
-import gameRouter from "./game.routes.js";
-import recordRouter from "./record.routes.js";
+import usersRouter from "./users.routes.js";
+import socialRouter from "./social.routes.js";
+import postsRouter from "./posts.routes.js";
 
 import authMiddleware from "../middleware/authMiddleware.js";
 
@@ -11,10 +12,13 @@ const router = express.Router();
 
 // Rotas públicas
 router.use("/auth", authRouter);
-router.use("/games", gameRouter);
-router.use("/records", recordRouter);
+
+// Middleware de autenticação para rotas abaixo
+router.use(authMiddleware);
 
 // Rotas protegidas
-router.use(authMiddleware);
+router.use("/users", usersRouter);
+router.use("/social-accounts", socialRouter);
+router.use("/posts", postsRouter);
 
 export default router;
