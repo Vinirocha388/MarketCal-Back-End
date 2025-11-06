@@ -112,7 +112,7 @@ npm start
 
 #### **1️⃣ REGISTRAR USUÁRIO** (primeira coisa a fazer!)
 - **Método:** `POST`
-- **URL:** `http://localhost:3000/auth/register`
+- **URL:** `http://localhost:4001/auth/register`
 - **Body:** `raw` → `JSON`
 ```json
 {
