@@ -17,7 +17,7 @@ model User {
 
   @@map("users")
 }
-
+  
 model SocialAccount {
   id        Int      @id @default(autoincrement())
   name      String
@@ -26,7 +26,7 @@ model SocialAccount {
   userId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
+   
   @@map("social_accounts")
 }
 
