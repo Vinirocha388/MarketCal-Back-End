@@ -1,225 +1,336 @@
-# MarketCal - Backend
 
-## 📋 SPRINT 2: Construção do Backend e Banco de Dados
+# 📅 MarketCal - Backend 
 
-### 🎯 Meta da Sprint
-Ter uma **API 100% funcional**, segura, documentada e com dados, pronta para ser consumida pelo frontend.
+## � Sobre
+
+API backend construída com **Node.js + Express + Prisma** para gerenciamento de publicações em redes sociais. Inclui autenticação JWT, CRUD completo e seed com dados de teste.
+
+**Stack:** Node.js • Express • Prisma ORM • SQLite • JWT • bcrypt
 
 ---
-## 🚀 Processo para Inicializar o Projeto
 
-fei 
+## ⚡ Quick Start
 
-1. Pré-requisitos
-    - Node.js (>= 18), npm ou yarn
-    - PostgreSQL em execução
-    - Git
-
-2. Clonar repositório
 ```bash
-git clone <repo-url>
-cd <repo-dir>
-```
-
-3. Instalar dependências
-```bash
+# 1. Clone e instale dependências
+git clone https://github.com/Vinirocha388/MarketCal-Back-End.git
+cd MarketCal-Back-End
 npm install
-# ou
-yarn
-```
 
-4. Configurar variáveis de ambiente
-- Criar arquivo `.env` a partir de `.env.example` e ajustar valores:
-```env
-DATABASE_URL=""
-PORT=
-JWT_SECRET="sua_chave_secreta"
-```
+# 2. Configure o .env
+echo DATABASE_URL="file:./prisma/dev.db" > .env
+echo PORT=4001 >> .env
+echo JWT_SECRET="sua_chave_secreta_aqui" >> .env
 
-5. Inicializar Prisma (gerar cliente e aplicar migrations)
-```bash
+# 3. Configure o Prisma
 npx prisma generate
-```
+npx prisma migrate dev --name init
+npm run prisma:seed
 
-
-6. Rodar em modo desenvolvimento
-```bash
+# 4. Rode o servidor
 npm run dev
 ```
 
-7. Build e produção
-```bash
-npm run build
-npm start
-```
-Dicas rápidas:
-- Criar branch de feature: git checkout -b feat/init-project
-- Commit frequente e pull antes de push
-- Manter `.env` fora do controle de versão (adicionar ao .gitignore)
-- Incluir scripts úteis em package.json para facilitar o fluxo de desenvolvimento
+🎉 Servidor rodando em `http://localhost:4001`
 
-## 📅 Cronograma
-
-**Semana 2:** Terça, 04/11/2025 e Quinta, 06/11/2025
+**Credenciais de teste:** `admin@marketcal.com` / `123456`
 
 ---
 
-## 📝 Tarefas Planejadas
+## 📡 Endpoints Principais
 
-### 1️⃣ Setup (Backend)
-- Configuração do projeto Node.js
-- Configuração do Express/NestJS
-- Configuração do Prisma
+### Público (sem autenticação)
 
-### 2️⃣ Banco de Dados - Conexão
-- Conexão com o PostgreSQL
-- Execução das migrations (baseadas no DER da Sprint 1)
-
-### 3️⃣ Desenvolvimento (Core)
-- Implementação dos CRUDs essenciais
-- Exemplo: Usuários
-- Implementação da Autenticação JWT
-
-### 4️⃣ Desenvolvimento (Regras)
-- Implementação dos CRUDs secundários
-- Implementação das regras de negócio complexas
-
-### 5️⃣ Banco de Dados - População
-- Criação dos scripts seeds
-- Execução dos scripts para popular o banco
-- **Mínimo de 100 itens** no banco de dados
-
-### 6️⃣ Testes (API)
-- Teste de todos os endpoints
-- Finalização da Documentação da API no Postman
-
----
-
-## 📦 Entrega Esperada
-✅ API testada e funcionando  
-✅ Banco de dados populado com dados de teste  
-
----
-
-## 🧪 Testando a API no Postman
-
-### 🚀 **Passo 1: Inicie o servidor**
-```bash
-npm start
+```http
+POST /auth/register    # Criar novo usuário
+POST /auth/login       # Fazer login (retorna JWT token)
 ```
 
-### 📋 **Requisições disponíveis:**
+### Protegido (requer header `Authorization: Bearer {token}`)
 
-#### **1️⃣ REGISTRAR USUÁRIO** (primeira coisa a fazer!)
-- **Método:** `POST`
-- **URL:** `http://localhost:4001/auth/register`
-- **Body:** `raw` → `JSON`
+```http
+GET    /auth/users           # Listar usuários
+GET    /social-accounts      # Listar contas sociais
+POST   /social-accounts      # Criar conta social
+GET    /posts                # Listar posts
+POST   /posts                # Criar post agendado
+```
+
+---
+
+## 📝 Exemplos de Requisições
+
+### 1️⃣ Registrar Novo Usuário
+
+```http
+POST http://localhost:4001/auth/register
+Content-Type: application/json
+
+{
+  "name": "Maria Silva",
+  "email": "maria@email.com",
+  "password": "senha123"
+}
+```
+
+**Resposta:**
 ```json
 {
-  "name": "João Silva",
-  "email": "joao@email.com",
-  "password": "123456"
+  "message": "Usuário criado com sucesso!",
+  "user": {
+    "id": 2,
+    "name": "Maria Silva",
+    "email": "maria@email.com"
+  }
 }
 ```
 
 ---
 
-#### **2️⃣ FAZER LOGIN** (pegar o token)
-- **Método:** `POST`
-- **URL:** `http://localhost:3000/auth/login`
-- **Body:** `raw` → `JSON`
-```json
+### 2️⃣ Fazer Login
+
+```http
+POST http://localhost:4001/auth/login
+Content-Type: application/json
+
 {
-  "email": "joao@email.com",
+  "email": "admin@marketcal.com",
   "password": "123456"
 }
 ```
-**⚠️ IMPORTANTE:** Copie o `token` que vier na resposta! Você vai precisar dele nas próximas requisições.
 
----
-
-#### **3️⃣ LISTAR USUÁRIOS** (precisa do token)
-- **Método:** `GET`
-- **URL:** `http://localhost:3000/auth/users`
-- **Headers:** 
-  - Key: `Authorization`
-  - Value: `Bearer SEU_TOKEN_AQUI`
-
----
-
-#### **4️⃣ CRIAR CONTA SOCIAL** (precisa do token)
-- **Método:** `POST`
-- **URL:** `http://localhost:3000/social-accounts`
-- **Headers:** 
-  - Key: `Authorization`
-  - Value: `Bearer SEU_TOKEN_AQUI`
-- **Body:** `raw` → `JSON`
+**Resposta:**
 ```json
 {
-  "name": "Instagram da Empresa",
+  "message": "Login realizado!",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": 1,
+    "name": "Admin MarketCal",
+    "email": "admin@marketcal.com"
+  }
+}
+```
+
+> 🔑 **Copie o token e use nas próximas requisições!**
+
+---
+
+### 3️⃣ Listar Usuários (Protegido)
+
+```http
+GET http://localhost:4001/auth/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+---
+
+### 4️⃣ Criar Conta Social (Protegido)
+
+```http
+POST http://localhost:4001/social-accounts
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Content-Type: application/json
+
+{
+  "name": "Instagram Empresa",
   "platform": "Instagram",
   "handle": "@minhaempresa",
   "userId": 1
 }
 ```
 
----
-
-#### **5️⃣ LISTAR CONTAS SOCIAIS** (precisa do token)
-- **Método:** `GET`
-- **URL:** `http://localhost:3000/social-accounts`
-- **Headers:** 
-  - Key: `Authorization`
-  - Value: `Bearer SEU_TOKEN_AQUI`
-
----
-
-#### **6️⃣ CRIAR POST** (precisa do token)
-- **Método:** `POST`
-- **URL:** `http://localhost:3000/posts`
-- **Headers:** 
-  - Key: `Authorization`
-  - Value: `Bearer SEU_TOKEN_AQUI`
-- **Body:** `raw` → `JSON`
+**Resposta:**
 ```json
 {
-  "content": "Meu primeiro post agendado!",
-  "imageUrl": "https://exemplo.com/imagem.jpg",
-  "scheduledAt": "2025-11-06",
-  "userId": 1
+  "id": 21,
+  "name": "Instagram Empresa",
+  "platform": "Instagram",
+  "handle": "@minhaempresa",
+  "userId": 1,
+  "createdAt": "2025-11-06T12:00:00.000Z"
 }
 ```
 
 ---
 
-#### **7️⃣ LISTAR POSTS** (precisa do token)
-- **Método:** `GET`
-- **URL:** `http://localhost:3000/posts`
-- **Headers:** 
-  - Key: `Authorization`
-  - Value: `Bearer SEU_TOKEN_AQUI`
+### 5️⃣ Listar Contas Sociais (Protegido)
+
+```http
+GET http://localhost:4001/social-accounts
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
 
 ---
 
-### 💡 **Dicas importantes:**
+### 6️⃣ Criar Post Agendado (Protegido)
 
-1. **Sempre comece pelo registro e login!**
-2. **Copie o token do login** e use em todas as outras requisições
-3. **Para adicionar o token:** Vá em `Headers` → adicione `Authorization` → cole `Bearer SEU_TOKEN`
-4. **Troque `SEU_TOKEN_AQUI`** pelo token real que você recebeu no login
-5. **O `userId`** geralmente será `1` para o primeiro usuário
+```http
+POST http://localhost:4001/posts
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Content-Type: application/json
+
+{
+  "content": "Novo produto lançado! 🚀 Confira em nosso site!",
+  "imageUrl": "https://picsum.photos/1080/1080",
+  "scheduledAt": "2025-11-10",
+  "userId": 1
+}
+```
+
+**Resposta:**
+```json
+{
+  "id": 101,
+  "content": "Novo produto lançado! 🚀 Confira em nosso site!",
+  "imageUrl": "https://picsum.photos/1080/1080",
+  "scheduledAt": "2025-11-10",
+  "status": "SCHEDULED",
+  "userId": 1,
+  "createdAt": "2025-11-06T12:00:00.000Z"
+}
+```
 
 ---
-✅ Documentação completa dos endpoints  
+
+### 7️⃣ Listar Todos os Posts (Protegido)
+
+```http
+GET http://localhost:4001/posts
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
 
 ---
 
-## 🛠️ Stack Tecnológico
-- **Runtime:** Node.js
-- **Framework:** Express/NestJS
-- **ORM:** Prisma
-- **Banco de Dados:** PostgreSQL
-- **Autenticação:** JWT
+### 8️⃣ Buscar Post por ID (Protegido)
+
+```http
+GET http://localhost:4001/posts/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+---
+
+### 9️⃣ Atualizar Post (Protegido)
+
+```http
+PUT http://localhost:4001/posts/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Content-Type: application/json
+
+{
+  "content": "Conteúdo atualizado!",
+  "status": "PUBLISHED"
+}
+```
+
+---
+
+### 🔟 Deletar Post (Protegido)
+
+```http
+DELETE http://localhost:4001/posts/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+**Resposta:**
+```json
+{
+  "message": "Post removido com sucesso"
+}
+```
+
+---
+
+## 📁 Estrutura
+
+```
+src/
+├── controllers/     # Lógica de negócio
+├── middleware/      # Middleware de autenticação
+├── models/          # Modelos Prisma
+├── routes/          # Definição de rotas
+└── server.js        # Entrada da aplicação
+
+prisma/
+├── schema.prisma    # Schema do banco
+├── migrations/      # Histórico de migrations
+└── seed/           # Dados de teste
+```
+
+---
+
+## �️ Scripts
+
+```bash
+npm run dev                    # Desenvolvimento (hot-reload)
+npm run prisma:generate        # Gerar Prisma Client
+npm run prisma:migrate:dev     # Rodar migrations
+npm run prisma:seed            # Popular banco de dados
+npx prisma studio              # Interface visual do banco
+```
+
+---
+
+## � Variáveis de Ambiente (.env)
+
+```env
+DATABASE_URL="file:./prisma/dev.db"
+PORT=4001
+JWT_SECRET="sua_chave_secreta_aqui"
+```
+
+---
+
+## 🐛 Troubleshooting
+
+| Problema | Solução |
+|----------|---------|
+| Erro JWT | Verifique se `JWT_SECRET` está no `.env` e se o token está no header |
+| Prisma Client error | Execute `npx prisma generate` |
+| Porta em uso | Altere `PORT` no `.env` |
+
+---
+
+## � Migração para PostgreSQL (Opcional)
+
+1. Edite `prisma/schema.prisma`:
+```prisma
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+```
+
+2. Atualize `.env`:
+```env
+DATABASE_URL="postgresql://user:pass@localhost:5432/marketcal"
+```
+
+3. Rode as migrations:
+```bash
+npx prisma migrate dev
+```
+
+---
+
+## 🤝 Contribuição
+
+1. Fork o projeto
+2. Crie uma branch (`git checkout -b feature/NovaFeature`)
+3. Commit (`git commit -m 'Add: Nova feature'`)
+4. Push (`git push origin feature/NovaFeature`)
+5. Abra um Pull Request
+
+---
+
+
+
+<div align="center">
+
+**⭐ Se este projeto ajudou você, deixe uma estrela!**
+
+</div>
 
 
 
