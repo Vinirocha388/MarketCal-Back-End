@@ -13,50 +13,79 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// MarketCal schema: Users, SocialAccounts, Posts
+
+enum Platform {
+  INSTAGRAM
+  LINKEDIN
+  TWITTER
+  FACEBOOK
+  TIKTOK
+  OTHER
+}
+
+enum PostStatus {
+  SCHEDULED
+  PUBLISHED
+  ERROR
+  CANCELLED
+}
+
 model User {
-  id       Int    @id @default(autoincrement())
-  name     String
-  nickname String @unique
-  email    String @unique
-  password String
+  id        Int             @id @default(autoincrement())
+  name      String?
+  email     String          @unique
+  password  String
+  role      String?         // ex: "agency", "member"
+
+  socialAccounts SocialAccount[]
+  posts          Post[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  // Relations
-  records Record[]
 
   @@map("users")
 }
 
-model Record {
-  id         String @id @default(cuid())
-  userId     Int
-  score      Int
-  screenShot String
-  gameId     String
+model SocialAccount {
+  id        Int      @id @default(autoincrement())
+  name      String   // e.g. "Instagram - Cliente A"
+  platform  Platform
+  handle    String?  // e.g. @cliente_a
+  metadata  Json?    // optional extra info (token, page id, etc.)
 
-  // Relations
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId Int
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("records")
-}
-
-model Game {
-  id       String @id @default(cuid())
-  name     String
-  platform String
-
-  // Relations
-  records Record[]
+  posts Post[]     @relation("PostAccounts")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("games")
+  @@map("social_accounts")
 }
+
+model Post {
+  id          Int          @id @default(autoincrement())
+  userId      Int
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  content     String       // post text
+  imageUrl    String?      // optional image url
+  media       Json?        // optional media array/metadata
+
+  scheduledAt DateTime     // when it should be posted
+  publishedAt DateTime?   // when it was published (nullable)
+  status      PostStatus   @default(SCHEDULED)
+
+  // many-to-many relation to SocialAccount (targets)
+  accounts    SocialAccount[] @relation("PostAccounts")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([scheduledAt])
+  @@map("posts")
+}
+
 
