@@ -1,90 +1,39 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
-}
-
-// MarketCal schema: Users, SocialAccounts, Posts
-
-enum Platform {
-  INSTAGRAM
-  LINKEDIN
-  TWITTER
-  FACEBOOK
-  TIKTOK
-  OTHER
-}
-
-enum PostStatus {
-  SCHEDULED
-  PUBLISHED
-  ERROR
-  CANCELLED
+  url      = "file:./sqlite"
 }
 
 model User {
-  id        Int             @id @default(autoincrement())
-  name      String?
-  email     String          @unique
-  password  String
-  role      String?         // ex: "agency", "member"
-
-  socialAccounts SocialAccount[]
-  posts          Post[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String @unique
+  password String
 
   @@map("users")
 }
 
 model SocialAccount {
-  id        Int      @id @default(autoincrement())
-  name      String   // e.g. "Instagram - Cliente A"
-  platform  Platform
-  handle    String?  // e.g. @cliente_a
-  metadata  Json?    // optional extra info (token, page id, etc.)
-
-  userId Int
-  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  posts Post[]     @relation("PostAccounts")
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id       Int    @id @default(autoincrement())
+  name     String
+  platform String
+  handle   String
+  userId   Int
 
   @@map("social_accounts")
 }
 
 model Post {
-  id          Int          @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
+  content     String
+  imageUrl    String?
+  scheduledAt String
+  status      String  @default("SCHEDULED")
   userId      Int
-  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  content     String       // post text
-  imageUrl    String?      // optional image url
-  media       Json?        // optional media array/metadata
-
-  scheduledAt DateTime     // when it should be posted
-  publishedAt DateTime?   // when it was published (nullable)
-  status      PostStatus   @default(SCHEDULED)
-
-  // many-to-many relation to SocialAccount (targets)
-  accounts    SocialAccount[] @relation("PostAccounts")
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([scheduledAt])
   @@map("posts")
 }
 

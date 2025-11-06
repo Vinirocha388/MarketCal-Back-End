@@ -6,6 +6,57 @@
 Ter uma **API 100% funcional**, segura, documentada e com dados, pronta para ser consumida pelo frontend.
 
 ---
+## 🚀 Processo para Inicializar o Projeto
+
+fei 
+
+1. Pré-requisitos
+    - Node.js (>= 18), npm ou yarn
+    - PostgreSQL em execução
+    - Git
+
+2. Clonar repositório
+```bash
+git clone <repo-url>
+cd <repo-dir>
+```
+
+3. Instalar dependências
+```bash
+npm install
+# ou
+yarn
+```
+
+4. Configurar variáveis de ambiente
+- Criar arquivo `.env` a partir de `.env.example` e ajustar valores:
+```env
+DATABASE_URL=""
+PORT=
+JWT_SECRET="sua_chave_secreta"
+```
+
+5. Inicializar Prisma (gerar cliente e aplicar migrations)
+```bash
+npx prisma generate
+```
+
+
+6. Rodar em modo desenvolvimento
+```bash
+npm run dev
+```
+
+7. Build e produção
+```bash
+npm run build
+npm start
+```
+Dicas rápidas:
+- Criar branch de feature: git checkout -b feat/init-project
+- Commit frequente e pull antes de push
+- Manter `.env` fora do controle de versão (adicionar ao .gitignore)
+- Incluir scripts úteis em package.json para facilitar o fluxo de desenvolvimento
 
 ## 📅 Cronograma
 

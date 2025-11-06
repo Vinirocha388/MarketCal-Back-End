@@ -3,7 +3,7 @@ import socialController from '../controllers/socialAccountController.js';
 
 const router = express.Router();
 
-router.get('/', socialController.list);
+router.get('/', socialController.getAll);
 router.get('/:id', socialController.getById);
 router.post('/', socialController.create);
 router.put('/:id', socialController.update);

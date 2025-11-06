@@ -22,11 +22,11 @@ async function main() {
 		data: {
 			name: 'Agencia MarketCal',
 			email: 'agency@example.com',
-			password: passwordHash,
+			password: 123456,
 			role: 'agency',
 		},
 	})
-
+ 
 	const platforms = ['INSTAGRAM', 'LINKEDIN', 'TWITTER', 'FACEBOOK', 'TIKTOK', 'OTHER']
 
 	// Criar 10 social accounts
