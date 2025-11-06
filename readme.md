@@ -1,11 +1,10 @@
-
 # 📅 MarketCal - Backend 
 
-## � Sobre
+## 🚀 Sobre
 
 API backend construída com **Node.js + Express + Prisma** para gerenciamento de publicações em redes sociais. Inclui autenticação JWT, CRUD completo e seed com dados de teste.
 
-**Stack:** Node.js • Express • Prisma ORM • SQLite • JWT • bcrypt
+**Stack:** Node.js • Express • Prisma ORM • PostgreSQL • JWT • bcrypt
 
 ---
 
@@ -18,7 +17,7 @@ cd MarketCal-Back-End
 npm install
 
 # 2. Configure o .env
-echo DATABASE_URL="file:./prisma/dev.db" > .env
+echo DATABASE_URL="postgresql://usuario:senha@localhost:5432/marketcal?schema=public" > .env
 echo PORT=4001 >> .env
 echo JWT_SECRET="sua_chave_secreta_aqui" >> .env
 
@@ -260,7 +259,7 @@ prisma/
 
 ---
 
-## �️ Scripts
+## 🛠️ Scripts
 
 ```bash
 npm run dev                    # Desenvolvimento (hot-reload)
@@ -272,13 +271,15 @@ npx prisma studio              # Interface visual do banco
 
 ---
 
-## � Variáveis de Ambiente (.env)
+## 🔐 Variáveis de Ambiente (.env)
 
 ```env
-DATABASE_URL="file:./prisma/dev.db"
+DATABASE_URL="postgresql://usuario:senha@localhost:5432/marketcal?schema=public"
 PORT=4001
 JWT_SECRET="sua_chave_secreta_aqui"
 ```
+
+> ⚠️ **Importante:** Substitua `usuario`, `senha` e `marketcal` pelos dados do seu banco PostgreSQL!
 
 ---
 
@@ -292,19 +293,21 @@ JWT_SECRET="sua_chave_secreta_aqui"
 
 ---
 
-## � Migração para PostgreSQL (Opcional)
+## 📦 Migração para SQLite (Opcional)
+
+Se preferir usar SQLite ao invés de PostgreSQL:
 
 1. Edite `prisma/schema.prisma`:
 ```prisma
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 ```
 
 2. Atualize `.env`:
 ```env
-DATABASE_URL="postgresql://user:pass@localhost:5432/marketcal"
+DATABASE_URL="file:./prisma/dev.db"
 ```
 
 3. Rode as migrations:
@@ -324,13 +327,8 @@ npx prisma migrate dev
 
 ---
 
-
-
 <div align="center">
 
 **⭐ Se este projeto ajudou você, deixe uma estrela!**
 
 </div>
-
-
-
