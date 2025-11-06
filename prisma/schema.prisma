@@ -15,6 +15,11 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // User tem muitas SocialAccounts
+  socialAccounts SocialAccount[]
+  // User tem muitos Posts
+  posts           Post[]
+
   @@map("users")
 }
   
@@ -24,6 +29,10 @@ model SocialAccount {
   platform  String
   handle    String
   userId    Int
+  // SocialAccount pertence a User
+  user      User     @relation(fields: [userId], references: [id])
+  // SocialAccount tem muitos Posts
+  posts     Post[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
    
@@ -37,8 +46,13 @@ model Post {
   scheduledAt String
   status      String   @default("SCHEDULED")
   userId      Int
+  // Post pertence a User
+  user        User     @relation(fields: [userId], references: [id])
+  // Post tem muitas SocialAccounts
+  socialAccounts SocialAccount[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   @@map("posts")
 }
+
