@@ -3,56 +3,48 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // User tem muitas SocialAccounts
+  id             Int             @id @default(autoincrement())
+  name           String
+  email          String          @unique
+  password       String
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  posts          Post[]
   socialAccounts SocialAccount[]
-  // User tem muitos Posts
-  posts           Post[]
 
   @@map("users")
 }
-  
+
 model SocialAccount {
   id        Int      @id @default(autoincrement())
   name      String
   platform  String
   handle    String
   userId    Int
-  // SocialAccount pertence a User
-  user      User     @relation(fields: [userId], references: [id])
-  // SocialAccount tem muitos Posts
-  posts     Post[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-   
+  user      User     @relation(fields: [userId], references: [id])
+  posts     Post[]   @relation("PostToSocialAccount")
+
   @@map("social_accounts")
 }
 
 model Post {
-  id          Int      @id @default(autoincrement())
-  content     String
-  imageUrl    String?
-  scheduledAt String
-  status      String   @default("SCHEDULED")
-  userId      Int
-  // Post pertence a User
-  user        User     @relation(fields: [userId], references: [id])
-  // Post tem muitas SocialAccounts
-  socialAccounts SocialAccount[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             Int             @id @default(autoincrement())
+  content        String
+  imageUrl       String?
+  scheduledAt    String
+  status         String          @default("SCHEDULED")
+  userId         Int
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  user           User            @relation(fields: [userId], references: [id])
+  socialAccounts SocialAccount[] @relation("PostToSocialAccount")
 
   @@map("posts")
 }
-
