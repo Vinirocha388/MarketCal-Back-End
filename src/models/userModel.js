@@ -85,6 +85,18 @@ class UserModel {
   async delete(id) {
     try {
       console.log(`Deletando usuário ID: ${id}`);
+      
+      // Deletar em cascata: primeiro posts, depois contas sociais, depois o usuário
+      await prisma.post.deleteMany({
+        where: { userId: Number(id) },
+      });
+      console.log(`✓ Posts do usuário deletados`);
+
+      await prisma.socialAccount.deleteMany({
+        where: { userId: Number(id) },
+      });
+      console.log(`✓ Contas sociais do usuário deletadas`);
+
       const user = await prisma.user.delete({
         where: { id: Number(id) },
       });
