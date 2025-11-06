@@ -98,6 +98,118 @@ Dicas rápidas:
 ## 📦 Entrega Esperada
 ✅ API testada e funcionando  
 ✅ Banco de dados populado com dados de teste  
+
+---
+
+## 🧪 Testando a API no Postman
+
+### 🚀 **Passo 1: Inicie o servidor**
+```bash
+npm start
+```
+
+### 📋 **Requisições disponíveis:**
+
+#### **1️⃣ REGISTRAR USUÁRIO** (primeira coisa a fazer!)
+- **Método:** `POST`
+- **URL:** `http://localhost:3000/auth/register`
+- **Body:** `raw` → `JSON`
+```json
+{
+  "name": "João Silva",
+  "email": "joao@email.com",
+  "password": "123456"
+}
+```
+
+---
+
+#### **2️⃣ FAZER LOGIN** (pegar o token)
+- **Método:** `POST`
+- **URL:** `http://localhost:3000/auth/login`
+- **Body:** `raw` → `JSON`
+```json
+{
+  "email": "joao@email.com",
+  "password": "123456"
+}
+```
+**⚠️ IMPORTANTE:** Copie o `token` que vier na resposta! Você vai precisar dele nas próximas requisições.
+
+---
+
+#### **3️⃣ LISTAR USUÁRIOS** (precisa do token)
+- **Método:** `GET`
+- **URL:** `http://localhost:3000/auth/users`
+- **Headers:** 
+  - Key: `Authorization`
+  - Value: `Bearer SEU_TOKEN_AQUI`
+
+---
+
+#### **4️⃣ CRIAR CONTA SOCIAL** (precisa do token)
+- **Método:** `POST`
+- **URL:** `http://localhost:3000/social-accounts`
+- **Headers:** 
+  - Key: `Authorization`
+  - Value: `Bearer SEU_TOKEN_AQUI`
+- **Body:** `raw` → `JSON`
+```json
+{
+  "name": "Instagram da Empresa",
+  "platform": "Instagram",
+  "handle": "@minhaempresa",
+  "userId": 1
+}
+```
+
+---
+
+#### **5️⃣ LISTAR CONTAS SOCIAIS** (precisa do token)
+- **Método:** `GET`
+- **URL:** `http://localhost:3000/social-accounts`
+- **Headers:** 
+  - Key: `Authorization`
+  - Value: `Bearer SEU_TOKEN_AQUI`
+
+---
+
+#### **6️⃣ CRIAR POST** (precisa do token)
+- **Método:** `POST`
+- **URL:** `http://localhost:3000/posts`
+- **Headers:** 
+  - Key: `Authorization`
+  - Value: `Bearer SEU_TOKEN_AQUI`
+- **Body:** `raw` → `JSON`
+```json
+{
+  "content": "Meu primeiro post agendado!",
+  "imageUrl": "https://exemplo.com/imagem.jpg",
+  "scheduledAt": "2025-11-06",
+  "userId": 1
+}
+```
+
+---
+
+#### **7️⃣ LISTAR POSTS** (precisa do token)
+- **Método:** `GET`
+- **URL:** `http://localhost:3000/posts`
+- **Headers:** 
+  - Key: `Authorization`
+  - Value: `Bearer SEU_TOKEN_AQUI`
+
+---
+
+### 💡 **Dicas importantes:**
+
+1. **Sempre comece pelo registro e login!**
+2. **Copie o token do login** e use em todas as outras requisições
+3. **Para adicionar o token:** Vá em `Headers` → adicione `Authorization` → cole `Bearer SEU_TOKEN`
+4. **Troque `SEU_TOKEN_AQUI`** pelo token real que você recebeu no login
+5. **O `userId`** geralmente será `1` para o primeiro usuário
+
+---
 ✅ Documentação completa dos endpoints  
 
 ---
@@ -109,16 +221,5 @@ Dicas rápidas:
 - **Banco de Dados:** PostgreSQL
 - **Autenticação:** JWT
 
----
 
-## 🚀 Status
-
-| Tarefa | Status |
-|--------|--------|
-| Setup (Backend) | ⏳ Em Progresso |
-| Banco de Dados (Conexão) | ⏳ Em Progresso |
-| Desenvolvimento (Core) | ⏳ Em Progresso |
-| Desenvolvimento (Regras) | ⏳ Não Iniciado |
-| Banco de Dados (População) | ⏳ Não Iniciado |
-| Testes (API) | ⏳ Não Iniciado |
 

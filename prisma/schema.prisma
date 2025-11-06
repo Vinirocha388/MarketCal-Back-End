@@ -4,37 +4,41 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./sqlite"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  name     String
-  email    String @unique
-  password String
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("users")
 }
 
 model SocialAccount {
-  id       Int    @id @default(autoincrement())
-  name     String
-  platform String
-  handle   String
-  userId   Int
+  id        Int      @id @default(autoincrement())
+  name      String
+  platform  String
+  handle    String
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("social_accounts")
 }
 
 model Post {
-  id          Int     @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   content     String
   imageUrl    String?
   scheduledAt String
-  status      String  @default("SCHEDULED")
+  status      String   @default("SCHEDULED")
   userId      Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@map("posts")
 }
-
-
