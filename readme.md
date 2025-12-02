@@ -1,10 +1,14 @@
-# 📅 MarketCal - Backend 
+# 📅 MarketCal - Backend
 
 ## 🚀 Sobre
 
 API backend construída com **Node.js + Express + Prisma** para gerenciamento de publicações em redes sociais. Inclui autenticação JWT, CRUD completo e seed com dados de teste.
 
-**Stack:** Node.js • Express • Prisma ORM • PostgreSQL • JWT • bcrypt
+**Stack:** Node.js • Express • Prisma ORM • SQLite • JWT • bc---
+
+## 💾 Banco de Dados
+
+Este projeto utiliza **SQLite** como banco de dados, o que torna a configuração mais simples e não requer instalação de servidores externos.
 
 ---
 
@@ -17,7 +21,7 @@ cd MarketCal-Back-End
 npm install
 
 # 2. Configure o .env
-DATABASE_URL="link postgres"
+DATABASE_URL="file:./prisma/dev.db"
 PORT=4000
 JWT_SECRET="sua_chave_secreta_aqui"
 
@@ -30,8 +34,6 @@ npm run dev
 ```
 
 🎉 Servidor rodando em `http://localhost:4000`
-
-
 
 ---
 
@@ -72,6 +74,7 @@ Content-Type: application/json
 ```
 
 **Resposta:**
+
 ```json
 {
   "message": "Usuário criado com sucesso!",
@@ -98,6 +101,7 @@ Content-Type: application/json
 ```
 
 **Resposta:**
+
 ```json
 {
   "message": "Login realizado!",
@@ -139,6 +143,7 @@ Content-Type: application/json
 ```
 
 **Resposta:**
+
 ```json
 {
   "id": 21,
@@ -177,6 +182,7 @@ Content-Type: application/json
 ```
 
 **Resposta:**
+
 ```json
 {
   "id": 101,
@@ -232,6 +238,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
 **Resposta:**
+
 ```json
 {
   "message": "Post removido com sucesso"
@@ -272,36 +279,25 @@ npx prisma studio              # Interface visual do banco
 
 ## 🐛 Troubleshooting
 
-| Problema | Solução |
-|----------|---------|
-| Erro JWT | Verifique se `JWT_SECRET` está no `.env` e se o token está no header |
-| Prisma Client error | Execute `npx prisma generate` |
-| Porta em uso | Altere `PORT` no `.env` |
+| Problema            | Solução                                                              |
+| ------------------- | -------------------------------------------------------------------- |
+| Erro JWT            | Verifique se `JWT_SECRET` está no `.env` e se o token está no header |
+| Prisma Client error | Execute `npx prisma generate`                                        |
+| Porta em uso        | Altere `PORT` no `.env`                                              |
 
 ---
 
-## 📦 Migração para SQLite (Opcional)
+## � Banco de Dados
 
-Se preferir usar SQLite ao invés de PostgreSQL:
+Este projeto utiliza **SQLite** como banco de dados, o que torna a configuração mais simples e não requer instalação de servidores externos.
 
-1. Edite `prisma/schema.prisma`:
-```prisma
-datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
-}
-```
+O arquivo do banco é criado automaticamente em `prisma/dev.db` após rodar as migrations.
 
-2. Atualize `.env`:
-```env
-DATABASE_URL="file:./prisma/dev.db"
-```
+Para visualizar e editar os dados do banco, use:
 
-3. Rode as migrations:
 ```bash
-npx prisma migrate dev
+npx prisma studio
 ```
-
 
 ---
 
