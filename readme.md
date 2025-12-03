@@ -21,13 +21,13 @@ cd MarketCal-Back-End
 npm install
 
 # 2. Configure o .env
-DATABASE_URL="file:./prisma/dev.db"
+DATABASE_URL="file:./dev.db"
 PORT=4000
 JWT_SECRET="sua_chave_secreta_aqui"
 
 # 3. Configure o Prisma
 npx prisma generate
-npm run prisma:seed
+
 
 # 4. Rode o servidor
 npm run dev
