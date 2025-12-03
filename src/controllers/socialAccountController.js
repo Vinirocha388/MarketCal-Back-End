@@ -38,7 +38,7 @@ class SocialAccountController {
       console.log('📋 Requisição: Criar conta social');
 
       
-      const { name, platform, handle, userId } = req.body;
+      const { name, platform, handle, userId, imageUrl } = req.body;
       
       // Validação básica
       if (!name || !platform || !handle || !userId) {
@@ -54,6 +54,7 @@ class SocialAccountController {
         platform,
         handle,
         userId: Number(userId),
+        imageUrl: imageUrl || null,
       });
       
       console.log('✓ Conta criada no controller');

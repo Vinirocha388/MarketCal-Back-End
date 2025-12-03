@@ -36,6 +36,9 @@ class PostController {
   async create(req, res) {
     try {
       console.log('📋 Requisição: Criar post');
+      console.log('📦 Body recebido:', req.body);
+      console.log('📦 Headers:', req.headers['content-type']);
+      
       const { content, imageUrl, scheduledAt, userId } = req.body;
       
       const post = await postModel.create({
